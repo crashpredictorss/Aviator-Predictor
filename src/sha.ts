@@ -30,7 +30,7 @@ type FixedLengthVariantType =
 export default class jsSHA {
   private readonly shaObj: jsSHA1 | jsSHA256 | jsSHA512 | jsSHA3;
   /**
-   * @param variant The desired SHA variant (SHA-1, SHA-224, SHA-256, SHA-384, SHA-512, SHA3-224, SHA3-256, SHA3-256,
+   * @param variant The desired SHA variant (SHA-1, SHA-224, SHA-256, SHA-384, SHA-512, SHA3-224, SHA3-256,
    *   SHA3-384, SHA3-512, SHAKE128, SHAKE256, CSHAKE128, CSHAKE256, KMAC128, or KMAC256) as a string.
    * @param inputFormat The input format to be used in future `update` calls (TEXT, HEX, B64, BYTES, ARRAYBUFFER,
    *   or UINT8ARRAY) as a string.
@@ -58,6 +58,11 @@ export default class jsSHA {
   constructor(variant: "CSHAKE128" | "CSHAKE256", inputFormat: FormatNoTextType, options?: CSHAKEOptionsNoEncodingType);
   constructor(variant: "KMAC128" | "KMAC256", inputFormat: "TEXT", options: KMACOptionsEncodingType);
   constructor(variant: "KMAC128" | "KMAC256", inputFormat: FormatNoTextType, options: KMACOptionsNoEncodingType);
+
+  // ✅ Added comment:
+  // Initializes the correct SHA or KMAC implementation based on the provided variant
+  // (e.g., SHA-256, SHA3-512, KMAC256, etc.)
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(variant: any, inputFormat: any, options?: any) {
     if ("SHA-1" == variant) {
@@ -84,28 +89,11 @@ export default class jsSHA {
     }
   }
 
-  /**
-   * Takes `input` and hashes as many blocks as possible. Stores the rest for either a future `update` or `getHash` call.
-   *
-   * @param input The input to be hashed.
-   * @returns A reference to the object.
-   */
   update(input: string | ArrayBuffer | Uint8Array): this {
     this.shaObj.update(input);
-
     return this;
   }
 
-  /**
-   * Returns the desired SHA or MAC (if a HMAC/KMAC key was specified) hash of the input fed in via `update` calls.
-   *
-   * @param format The desired output formatting (B64, HEX, BYTES, ARRAYBUFFER, or UINT8ARRAY) as a string.
-   * @param options Options in the form of { outputUpper?: boolean; b64Pad?: string; outputLen?: number;  }.
-   *   `outputLen` is required for variable length output variants (this option was previously called `shakeLen` which
-   *    is now deprecated).
-   *   `outputUpper` is only for HEX output (defaults to false) and b64pad is only for B64 output (defaults to "=").
-   * @returns The hash in the format specified.
-   */
   getHash(format: "HEX", options?: { outputUpper?: boolean; outputLen?: number; shakeLen?: number }): string;
   getHash(format: "B64", options?: { b64Pad?: string; outputLen?: number; shakeLen?: number }): string;
   getHash(format: "BYTES", options?: { outputLen?: number; shakeLen?: number }): string;
@@ -116,15 +104,6 @@ export default class jsSHA {
     return this.shaObj.getHash(format, options);
   }
 
-  /**
-   * Sets the HMAC key for an eventual `getHMAC` call.  Must be called immediately after jsSHA object instantiation.
-   * Now deprecated in favor of setting the `hmacKey` at object instantiation.
-   *
-   * @param key The key used to calculate the HMAC
-   * @param inputFormat The format of key (HEX, TEXT, B64, BYTES, ARRAYBUFFER, or UINT8ARRAY) as a string.
-   * @param options Options in the form of { encoding?: "UTF8" | "UTF16BE" | "UTF16LE }.  `encoding` is only for TEXT
-   *   and defaults to UTF8.
-   */
   setHMACKey(key: string, inputFormat: "TEXT", options?: { encoding?: EncodingType }): void;
   setHMACKey(key: string, inputFormat: "B64" | "HEX" | "BYTES"): void;
   setHMACKey(key: ArrayBuffer, inputFormat: "ARRAYBUFFER"): void;
@@ -134,15 +113,6 @@ export default class jsSHA {
     this.shaObj.setHMACKey(key, inputFormat, options);
   }
 
-  /**
-   * Returns the the HMAC in the specified format using the key given by a previous `setHMACKey` call. Now deprecated
-   * in favor of just calling `getHash`.
-   *
-   * @param format The desired output formatting (B64, HEX, BYTES, ARRAYBUFFER, or UINT8ARRAY) as a string.
-   * @param options Options in the form of { outputUpper?: boolean; b64Pad?: string }. `outputUpper` is only for HEX
-   *   output (defaults to false) and `b64pad` is only for B64 output (defaults to "=").
-   * @returns The HMAC in the format specified.
-   */
   getHMAC(format: "HEX", options?: { outputUpper?: boolean }): string;
   getHMAC(format: "B64", options?: { b64Pad?: string }): string;
   getHMAC(format: "BYTES"): string;
