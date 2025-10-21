@@ -5,6 +5,7 @@ import {
   SHAKEOptionsEncodingType,
   SHAKEOptionsNoEncodingType,
   EncodingType,
+  formating,
   FixedLengthOptionsEncodingType,
   FixedLengthOptionsNoEncodingType,
   FormatNoTextType,
