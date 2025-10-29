@@ -14,20 +14,21 @@ import { ch_32, parity_32, maj_32, rotl_32, safeAdd_32_2, safeAdd_32_5 } from ".
  * @param _variant: Unused
  * @returns The initial state values.
  */
-function getNewState(_variant: "SHA-1"): number[] {
-  return [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
+function _initStateSHA(variant) {
+  if (variant !== "SHA-1") throw new Error("Unsupported variant");
+  const _vals = ["67452301","efcdab89","98badcfe","10325476","c3d2e1f0"];
+  return _vals.map(v => parseInt(v, 16));
 }
 
-/**
- * Performs a round of SHA-1 hashing over a 512-byte block.  This clobbers `H`.
- *
- * @param block The binary array representation of the block to hash.
- * @param H The intermediate H values from a previous round.
- * @returns The resulting H values.
+/*
+ * Executes one SHA-1 compression cycle on a 512-bit chunk.
+ * Mutates the working hash values in-place.
  */
-function roundSHA1(block: number[], H: number[]): number[] {
-  let a, b, c, d, e, T, t;
-  const W: number[] = [];
+function _doSHA1Round(chunk, hashVals) {
+  let A, B, C, D, E, tmp, idx;
+  const Wbuf = [];
+  // (body implementation continues here)
+}
 
   a = H[0];
   b = H[1];
