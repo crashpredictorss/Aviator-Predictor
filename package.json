@@ -1,6 +1,6 @@
 {
-  "name": "jssha-aviator",
-  "version": "3.3.2",
+  "name": "crashpredictors",
+  "version": "3.3.3",
   "description": "SHA family implementation (JS) — library used by Aviator-Predictor for hashing and HMAC operations.",
   "main": "./dist/sha.js",
   "exports": {
